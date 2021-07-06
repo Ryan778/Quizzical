@@ -1,12 +1,14 @@
 # Quizzical
+![MIT License](https://img.shields.io/github/license/Ryan778/Quizzical?style=flat-square)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/Ryan778/Quizzical?style=flat-square)
 
-**&copy; 2021 Ryan Zhang** - Licensed under the [MIT License](license.md)*
+**&copy; 2021 Ryan Zhang**
 
 Quizzical is my submission to FBLA's 2021 Coding and Programming event. 
 
-This readme file provides technical documentation on how to build/run Quizzical from source code, as well as instructions on extending Quizzical's functionality. 
+![Quizzical Landing Page on Windows 11](docs/readme/landing.png)
 
-*\*After July 3rd, 2021 (the conclusion of FBLA NLC 2021). Until then, all rights are reserved to preserve competitive integrity.*
+This readme file provides technical documentation on how to build/run Quizzical from source code, as well as instructions on extending Quizzical's functionality. For help on the application itself, use the in-app [Quizzical Help Pages](#quizzical-help-pages) instead.
 
 ## Technical Background
 Quizzical is built using the open source [Electron](https://www.electronjs.org/) framework, allowing it to run on all major desktop operating systems (Windows, Linux, and MacOS) with equivalent functionality. [Electron Forge](https://www.electronforge.io/) is used to handle development and builds. 
@@ -28,6 +30,8 @@ You can build Quizzical using `npm run make`.
 
 ### Quizzical Help Pages
 End user help is available in the interactive help menu, accessible using the "Help" button in the toolbar. Questions are categorized by topic, and users can click on common questions to recieve more information in a separate page. 
+
+By placing the help option in the toolbar, users can access the help menu no matter where they are in the application.
 
 ## Advanced Features
 ### Modifying Questions
@@ -66,3 +70,16 @@ All significant portions of code are well documented to make extending Quizzical
 - CSS is stored in `src/index.css` and is responsible for the aesthetics. 
 - Third party libraries are stored under the `src/lib` directory. 
 - The interactive help menu is its own separate "app", located under the `src/help` directory. It is designed to run standalone - separate from the rest of the application. 
+
+## Post NLC Addendum
+Quizzical placed **1st** at Colorado's State Leadership Conference (SLC) and **7th** at FBLA's National Leadership Conference (NLC). For reference, the 2021 NLC Topic has been included below.
+
+> **Develop an original computer program to randomly generate a five-question FBLA quiz from a database. The program must complete a minimum of the following tasks:**
+>
+> - Have at least 50 questions in the database with the ability to see correct answers
+> - Include at least 4 types of questions (i.e. multiple choice, T/F, fill-in-the-blank, matching, and dropdown, etc.).
+> - Inform the user which questions were correctly answered
+> - Calculate the total correct on the five-question quiz
+> - Generate a printable report on quiz results
+> - Data must be stored persistently. Storage may be in a relational database, a document-oriented NoSQL database, flat text files, flat JSON, or XML files.
+> - All data entry must be validated with appropriate user notifications and error messages including the use of required fields
