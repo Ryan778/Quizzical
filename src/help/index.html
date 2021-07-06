@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='UTF-8'>
+    <title>Help Pages - Quizzical</title>
+    <link rel='stylesheet' href='help.css'>
+    <script src='../lib/fa.all.min.js'></script>
+    <script src='../lib/vue.js'></script>
+  </head>
+  <body>
+    <div id='app'>
+      <div id='main' v-show='!showDetails'>
+        <h1>Quizzical</h1>
+        <p>Welcome to Quizzical!<br/>Select a topic below to recieve more information on it.</p>
+        <h2>Quiz</h2>
+        <h3>Creating a Quiz</h3>
+        <a data-content='To create a quiz, simply select the "New Quiz" button. You will then be prompted to pick a type of quiz before the quiz launches.'>How to create a quiz</a>
+        <a data-content='There are two types of quizzes: All random and Fixed. All random will pick five unique and completely random questions from the quiz database whereas Fixed will pick the first question of each question type, thus guaranteeing one of every question.'>Types of quizzes</a>
+        <h3>Types of Questions</h3>
+        <a data-content='Multiple choice questions have four question options, which are randomized each time you recieve the question, of which one is correct. Select the answer that BEST responds to the question.'>Multiple Choice</a>
+        <a data-content='True/False questions ask whether a given statement is true or false. You will have to pick one of the two options.'>True/False</a>
+        <a data-content='Short answer questions are effectively "fill in the blank", and are typically composed of one or two words. While spelling does matter, capitalization does not.'>Short Answer</a>
+        <a data-content='Ordering questions give you three items which must be sequentially ordered based on the prompt. Select "Done" when you finish, and "Edit" afterwards if you need to change the ordering.'>Ordering</a>
+        <a data-content='Numerical questions are like short answer questions, except you have to enter a valid integer as an answer.'>Numerical</a>
+        <h3>Timer</h3>
+        <a data-content='The timer starts immediately when you select the "Create Quiz" button.'>When does the timer start in a quiz?</a>
+        <a data-content='No. Once you start the quiz, the timer cannot be stopped.'>Can I pause/restart the timer in a quiz?</a>
+        <h3>Miscellaneous</h3>
+        <a data-content='No, if you exit the quiz all progress will be discarded.'>Can I save and resume a quiz?</a>
+        <h2>Reports</h2>
+        <h3>Viewing Reports</h3>
+        <a data-content='Select the "Past Results" screen to pull up all of your previous quizzes. It will show the date and time each quiz was taken, the score on that quiz, as well as a link to review details of the quiz.'>How do I view a finished quiz?</a>
+        <h3>Exporting Reports</h3>
+        <a data-content='On the "Past Results" screen or on a specific quiz review page, you can select the "Export" button to create a printable copy of your quiz.'>How do I export a quiz?</a>
+        <a data-content='Yes. There are options available to change what is shown on the report that is being generated.'>Can I customize the report generated?</a>
+        <h2>Other</h2>
+        <h3>Developer Tools</h3>
+        <a data-content='Please refer to the readme file available in the GitHub repository for this project.'>How can I add my own questions into Quizzical?</a>
+        <a data-content='On packaged builds, you can configure Quizzical to open them by setting the environment variable "ELECTRON_DEV" to "1" on your computer. If you are running from source code, developer tools open automatically upon startup.'>How can I open Quizzical's developer tools?</a>
+        <h3>Legal</h3>
+        <a data-content='Select the "About" button on the landing page for details.'>What open source software does Quizzical use?</a>
+        <a data-content='Select the "About" button on the landing page for details.'>Where do the images used in Quizzical come from?</a>
+      </div>
+      <div id='details' v-if='showDetails'>
+        <h1>Quizzical</h1>
+        <p><b><i class='fas fa-caret-right'></i> {{subject}}</b></p>
+        <p>{{details}}</p>
+        <a v-on:click='showDetails=false'>Return</a>
+      </div>
+    </div>
+  </body>
+  <script src='help.js'></script>
+</html>

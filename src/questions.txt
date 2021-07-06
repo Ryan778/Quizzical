@@ -1,0 +1,50 @@
+mc;Which state was the first FBLA chapter chartered in?;Tennessee;Virginia;California;Delaware
+mc;Which of the following is NOT a word listed on the FBLA emblem?;Community;Service;Education;Progress
+mc;Which state is the National FBLA-PBL Center located in?;Virginia;Tennessee;South Carolina;Florida
+mc;Which of the following is NOT a National FBLA-PBL region?;Pacific;Mountain Plains;Southern;North Central
+mc;Who manages the affairs and property of FBLA?;Board of Directors;President;CEO;CFO
+mc;The Mountain Plains region of FBLA contains all but which of the following states?;Iowa;Colorado;Texas;North Dakota
+mc;Which year did FBLA annual membership top 200,000 for the first time? ;1987;1989;1991;1985
+mc;The quorum for all business meetings of the NLC is:;Simple Majority;3/5 Majority;2/3 Majority;3/4 Majority
+mc;When does the fiscal year of FBLA end? ;June 30;July 31;April 1;May 30
+mc;A formal proposal by a member suggesting for a certain action is called a:;Motion;Request;Demand;Letter of Suggestion
+tf;The first executive director of FBLA-PBL was Dr. Edward Miller. ;true
+tf;FBLA is funded exclusively by corporate contributions. ;false;Membership dues, conference fees, and grants are all a part of its funding. 
+tf;The Institute for Leaders is held in conjunction with the national conference.;true
+tf;American Entereprise Day was founded by Jimmy Carter.;true
+tf;Proposals for new events or for the retirement of current competitive events must be submitted by the first Friday in June.;false;They must be submitted by the first Friday in May. 
+tf;FBLA publishes an official magazine titled Future Business Leaders. ;false;They do publish a magazine; however it's called Tomorrow's Business Leader.
+tf;The yellow candle at a chapter officer installation ceremony stands for constancy in attendance.;true
+tf;Iowa is the first FBLA state chapter.;true
+tf;Twenty FBLA state chapters were established in the first three years alone. ;false;Only ten state chapters were. 
+tf;The Professional Division of FBLA was formed in 1989.;true
+sa;The two official colors of FBLA are gold and _____.;blue
+sa;The founder of FBLA is Hamden L. ________.;Forkner
+sa;In the officier installation ceremony, a _____ colored candle represents the chapter in its entirety. ;white
+sa;Which month of the year does FBLA-PBL week occur?;February
+sa;Members of the board of directors are nominated by ______ _________. ;state chairman
+sa;The fifth goal of FBLA is to develop ______, prepare for useful citizenship, and foster patriotism.;character
+sa;The sixth goal of FBLA is to encourage and practice efficient _____ management.;money
+sa;The seventh goal of FBLA is to enourage scholarship and promote ______ ______.;school loyalty
+sa;The eigth goal of FBLA is to assist students in the establishment of _________ goals. ;occupational
+sa;The ninth goal of FBLA is to facilitate the transition from school to ____. ;work
+o;Order the following competition levels from earliest to latest (during a school year).;DLC;SLC;NLC
+o;Order the following competitive events in the order they were released, from earliest to most recent.;Accounting I;Introduction to Business;Supply Chain Management
+o;In which order does a FBLA member earn their CSA awards? ;Community;Service;Achievement
+o;In which order does a FBLA member earn their BAA awards?;Future;Business;Leader
+o;Order the following three articles of Bylaws from 1st (Article I) to 3rd (Article III). ;Name;Purpose;Membership
+o;Match the following National FBLA goals from 1st to 3rd.;Develop competent and aggressive business leadership.;Strengthen the confidence of students in themselves and their work.;Create more interest in and understanding of American business enterprise.
+o;In descending order, sort these Article Bylaws by how many sections they have (i.e. "1" for most);Article V;Article III;Article I
+o;In descending order, sort these Article Bylaws by how many sections they have (i.e. "1" for most);Article VIII;Article XI;Article XIII
+o;Order the following events from earliest to most recent. ;Columbia proposes to business teachers nation-wide that a national organization is needed.;The NCBE sponsors a proposed student organization.;An experimental chapter is charted in Johnson City.
+o;Order the following events from earliest to most recent. ;The NCBE sponsors FBLA.;The United Business Education Association sponsors FBLA.;FBLA becomes an independent nonprofit.
+n;How many stanzas does the FBLA creed have?;7
+n;Which year was the first state FBLA chapter chartered?;1947
+n;Which year was Phi Beta Lambda created?;1958
+n;Which year was FBLA's Professional Division created?;1989
+n;What year was the FBLA Middle Level division formed?;1994
+n;During debate, how many times can each member speak on a motion?;2
+n;How many times a year is FBLA's Tomorrow's Business Leader published?;4
+n;How many times a year is FBLA's PBL Business Leader published?;3
+n;How many total candles are there at an officer installation ceremony?;8
+n;How many members are on the National Board of Directors?;15

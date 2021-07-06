@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='UTF-8'>
+    <title>Quizzical</title>
+    <link rel='stylesheet' href='index.css'>
+    <link rel='stylesheet' media='print' href='print.css'>
+    <!-- 
+      Libraries: 
+      - fa.all.min.js: Icon library
+      - localforage.min.js: IndexedDB library to read/write to the IndexedDB database
+      - luxon.min.js: Time library to calculate dates and streaks
+      - vue.js: Templating library used to render everything you see in the application
+     -->
+    <script src='lib/fa.all.min.js'></script>
+    <script src='lib/localforage.min.js'></script>
+    <script src='lib/luxon.min.js'></script>
+    <script src='lib/vue.js'></script>
+  </head>
+  <body>
+    <div id='app'>
+      <!-- The landing page contains the main menu, where users can choose where to go. This is also the page that first opens when the app is launched. -->
+      <div id='div-landing-bk' class='bk' key='lbk' v-if='page==="landing"'></div>
+      <div id='div-landing' class='div-padded' key='l' v-if='page==="landing"'>
+        <h1>Quizzical</h1>
+        <button v-on:click='dialog="quiz-selection"'>New Quiz</button>
+        <button v-on:click='page="quiz-history"'>Past Results</button>
+        <button v-on:click='page="daily-trainer"'>Streaks</button>
+        <button v-on:click='page="about"'>About</button>
+        <button onclick='exit()'>Exit</button>
+      </div>
+      <!-- The quiz page is where users are presented with a series of five questions and given an interface to answer said questions with. Questions are validated to ensure that they are answered before the user is allowed to submit. -->
+      <div id='div-quiz' class='div-padded' key='q' v-if='page==="quiz"'>
+        <!-- The navbar consists of the "back" button, navigation/status buttons, and the "submit"/"export" button. -->
+        <div id='quiz-navbar'>
+          <button style='float: left' v-on:click='quiz.review?page="quiz-history":confirmExit()'>Exit</button>
+          <button v-on:click='quiz.current--' :disabled='quiz.current==0'><i class='fas fa-arrow-left'></i></button>
+          <button class='quiz-navbar-question' v-for='(question, index) in quiz.questions' v-on:click='quiz.current=index' :class='{active:quiz.current==index}'>{{index+1}} <span v-if='quiz.review&&question.correct'><i class='fas fa-check green'></i></span><span v-else-if='quiz.review'><i class='fas fa-times red'></i></span></button>
+          <button v-on:click='quiz.current++' :disabled='quiz.current+1==quiz.questions.length'><i class='fas fa-arrow-right'></i></button>
+          <button v-if='!quiz.review' id='q-nav-submit' v-on:click='dialog="quiz-submit"'>Submit</button><button v-else id='q-nav-submit' v-on:click='page="quiz-export"'>Export</button>
+        </div>
+        <h1 style='margin-bottom: 4px;'>Quiz</h1>
+        <p style='margin: 0'>Question {{currentQuestion.index+1}} • {{getQuestionType(currentQuestion.type)}}</p>
+        <h2>{{currentQuestion.question}}</h2>
+        <p v-if='quiz.review'>Correct Answer: <b>{{formatAnswer(currentQuestion.answer)}}</b></p>
+        <!-- A separate template is built depending on which type of question is present. -->
+        <div v-if='currentQuestion.type === "mc"'>
+          <p v-if='!quiz.review'>Select your answer below:</p>
+          <div style='display: inline-block'>
+            <template v-for='(option, index) in currentQuestion.options'>
+              <button :id='`q-mc-${quiz.current}-${index}`' class='q-mc-btn' :class='{selected: option===currentQuestion.sel}' v-on:click='currentQuestion.sel=option' :disabled='quiz.review'><span v-show='option===currentQuestion.sel'><i class='far fa-dot-circle fa-fw'></i></span><span v-show='option!==currentQuestion.sel'><i class='far fa-circle fa-fw'></i></span> {{option}}</button>
+            </template>
+          </div>
+        </div>
+        <div v-if='currentQuestion.type === "tf"'>
+          <button class='q-tf-btn' :class='{selected: 1===currentQuestion.sel}' v-on:click='currentQuestion.sel=1' :disabled='quiz.review'>True</button>
+          <button class='q-tf-btn' :class='{selected: 0===currentQuestion.sel}' v-on:click='currentQuestion.sel=0' :disabled='quiz.review'>False</button>
+        </div>
+        <div v-if='currentQuestion.type === "sa"'>
+          <p v-if='!quiz.review'>Type your answer below:</p>
+          <input class='q-input' type='text' :class='{filled: currentQuestion.sel.length>0}' :key='currentQuestion.index' v-model='currentQuestion.sel' placeholder='Type your answer...' maxlength='64' :disabled='quiz.review'/>
+        </div>
+        <div v-if='currentQuestion.type === "n"'>
+          <p v-if='!quiz.review'>Type your answer (as an integer) below:</p>
+          <input class='q-input' type='number' :class='{filled: currentQuestion.sel.length>0}' :key='currentQuestion.index' v-model='currentQuestion.sel' placeholder='Type your answer...' :disabled='quiz.review'/>
+        </div>
+        <div v-if='currentQuestion.type === "o"'>
+          <p v-if='!quiz.review'>Drag and drop these items to rearrange their order. Select "Done" once you finish.<br/><i><span v-if='1===currentQuestion.sel'>Your order has been locked in. Select "Edit" to change it.</span><span v-else>You'll be able to edit it afterwards, if needed.</span></i></p>
+          <div style='display: inline-block'>
+            <div v-for='(option, index) in currentQuestion.options' :key='option' @drop='onDrop($event, index)' @dragover.prevent @dragenter.prevent class='q-o-outer' :class='{locked: 1===currentQuestion.sel}'><p draggable='true' :data-index='index' @dragstart='onDrag($event, index)'><span class='q-o-num'>{{index+1}}</span> {{option}}</p></div>
+          </div>
+          <br/>
+          <button :class='{selected: 1===currentQuestion.sel}' v-on:click='currentQuestion.sel=1' ><span class='q-o-num'><i class='fas fa-check'></i></span> Done</button> <button v-if='1===currentQuestion.sel && !quiz.review' v-on:click='currentQuestion.sel=0'><i class='fas fa-pen'></i></span> Edit</button>
+        </div>
+        <!-- The footer consists of the just the time taken indicator. -->
+        <div id='quiz-footer'>
+          <p><i class='fas fa-clock'></i> Time: <b>{{getFormattedTime()}}</b></p>
+        </div>
+      </div>
+      <div id='div-quiz-history' class='div-padded' key='qh' v-if='page==="quiz-history"'>
+        <h1>Quiz History</h1>
+        <button v-on:click='page="landing"'><i class='fas fa-arrow-left'></i> Return</button>
+        <div v-if='quizHistory'>
+          <div v-for='(quiz, index) in quizHistory' class='qh-item'>
+            <p>
+              <b>{{formatTS(quiz.ts)}}</b> Score: {{quiz.stats.correct}}/{{quiz.stats.total}}
+              <span style='float: right'><a v-on:click='qh(index, 0)'>Review</a> • <a v-on:click='qh(index, 1)'>Export</a><!-- • <a>Delete</a>--></span>
+            </p>
+          </div>
+        </div>
+        <div v-else>
+          <p>You have not completed any quizzes yet.</p>
+        </div>
+      </div>
+      <div id='div-quiz-export' key='qe' v-if='page==="quiz-export"'>
+        <div id='qe-settings'>
+          <h1>Export Quiz</h1>
+          <p><i>A preview of the page output can be seen on the right.</i></p>
+          <p><b>Options</b><br/><i>You can customize your printable report using the options below.</i></p>
+          <button class='qe-cfg' :class='{selected: exp.color}' v-on:click='exp.color=!exp.color'><span v-show='!exp.color'><i class='far fa-square fa-fw'></i></span><span v-show='exp.color'><i class='far fa-check-square fa-fw'></i></span> Print in color</button>
+          <button class='qe-cfg' :class='{selected: exp.showQuestion}' v-on:click='exp.showQuestion=!exp.showQuestion'><span v-show='!exp.showQuestion'><i class='far fa-square fa-fw'></i></span><span v-show='exp.showQuestion'><i class='far fa-check-square fa-fw'></i></span> Show question text</button>
+          <button class='qe-cfg' :class='{selected: exp.showOptions}' v-on:click='exp.showOptions=!exp.showOptions'><span v-show='!exp.showOptions'><i class='far fa-square fa-fw'></i></span><span v-show='exp.showOptions'><i class='far fa-check-square fa-fw'></i></span> Show question options (if applicable)</button>
+          <button class='qe-cfg' :class='{selected: exp.showAnswer}' v-on:click='exp.showAnswer=!exp.showAnswer'><span v-show='!exp.showAnswer'><i class='far fa-square fa-fw'></i></span><span v-show='exp.showAnswer'><i class='far fa-check-square fa-fw'></i></span> Show correct answers</button>
+          <button class='qe-cfg' :class='{selected: exp.showResponses}' v-on:click='exp.showResponses=!exp.showResponses'><span v-show='!exp.showResponses'><i class='far fa-square fa-fw'></i></span><span v-show='exp.showResponses'><i class='far fa-check-square fa-fw'></i></span> Show your answers</button>
+          <p><b>Actions</b></p>
+          <button class='qe-action' v-on:click='page="quiz-history"'><i class='fas fa-arrow-left'></i> Cancel</button>
+          <button class='qe-action' onclick='window.print()'><i class='fas fa-print'></i> Print</button>
+        </div>
+        <div id='qe-preview' :class='{"filter-bw": !exp.color}'>
+          <h1 style='margin-bottom: 0'>Quiz Report</h1>
+          <p class='logo'>Quizzical</p>
+          <h2>Summary</h2>
+          <span>Date: <b><b>{{quiz.stats.date}}</b></b><br/>Time Taken: <b>{{getFormattedTime()}}</b><br/>Score: <b>{{quiz.stats.correct}}/{{quiz.stats.total}}</b> </span>
+          <h2>Individual Questions</h2>
+          <template v-for='(question, index) in quiz.questions'>
+            <h3>Question {{index+1}}</h3>
+            <b>{{getQuestionType(question.type)}} • <span v-if='question.correct' class='green'>Correct (1/1)</span><span v-else class='red'>Incorrect (0/1)</span></b>
+            <span v-if='exp.showQuestion' class='qe-details'><i>{{question.question}}</i></span>
+            <span v-if='exp.showOptions && question.type==="mc"' class='qe-details'>Options: <b>{{question.options.join(', ')}}</b></span>
+            <span v-if='exp.showResponses && question.type==="o"' class='qe-details'>Your Answer: <b>{{question.options.join(', ')}}</b></span>
+            <span v-if='exp.showResponses && question.type==="tf"' class='qe-details'>Your Answer: <b>{{question.options?"True":"False"}}</b></span>
+            <span v-if='exp.showResponses && question.type!=="o" && question.type!=="tf"' class='qe-details'>Your Answer: <b>{{question.sel}}</b></span>
+            <span v-if='exp.showAnswer' class='qe-details'>Correct Answer: <b>{{formatAnswer(question.answer)}}</b></span>
+          </template>
+        </div>
+      </div>
+      <div id='div-streaks-bk' key='dtb' class='bk' v-if='page==="daily-trainer"'></div>
+      <div id='div-streaks' key='dt' class='div-padded' v-if='page==="daily-trainer"'>
+        <h2>Streaks</h2>
+        <button v-on:click='page="landing"'><i class='fas fa-arrow-left'></i> Return</button>
+        <div class='div-col-outer'>
+          <div class='div-2col'>
+            <div id='div-streak'>
+              <div id='div-streak-inner'>
+                <h1>{{streak.days}}</h1> <i class='fas fa-fire'></i><br/>day streak
+              </div>
+            </div>
+          </div>
+          <div class='div-2col'>
+            <img id='div-streak-img' @dragstart.prevent :src='streak.image'/>
+          </div>
+        </div>
+        <p id='p-streak' v-if='streak.doneToday'>You've already taken a practice quiz today, good job!</p>
+        <p id='p-streak' v-else>You have not taken a practice quiz today yet. Don't forget it!</p>
+      </div>
+      <div id='div-about' key='a' class='div-padded' v-if='page==="about"'>
+        <h2>About Quizzical</h2>
+        <button v-on:click='page="landing"'><i class='fas fa-arrow-left'></i> Return</button>
+        <p>&copy; 2021 Ryan Zhang</p>
+        <h3>Open Source Libraries</h3>
+        <ul>
+          <li>Electron: <a v-on:click='openExternal("https://www.electronjs.org/")'>electronjs.org</a></li>
+          <li>Vue.js: <a v-on:click='openExternal("https://vuejs.org/")'>vuejs.org</a></li>
+          <li>Font Awesome: <a v-on:click='openExternal("https://fontawesome.com/")'>fontawesome.com</a></li>
+          <li>localforage: <a v-on:click='openExternal("https://localforage.github.io/localForage/")'>localforage.github.io</a></li>
+          <li>Luxon: <a v-on:click='openExternal("https://moment.github.io/luxon/index.html")'>moment.github.io</a></li>
+        </ul>
+        <h3>Images</h3>
+        <p>Background Images: <a v-on:click='openExternal("https://pixabay.com/")'>Pixabay</a>, used under the Pixabay license.<br/>Cat Images: <a v-on:click='openExternal("https://www.freepik.com/")'>FreePik</a>, used under the Creative Commons license.</p>
+      </div>
+      <transition name='fade'>
+        <div id='dialog' v-if='dialog'>
+          <div id='dialog-bk'></div>
+          <div id='dialog-div'>
+            <button style='float:right; border: none; font-size: 20px; margin-top: 12px' v-on:click='dialog=false'><i class='fas fa-times'></i></button>
+            <template v-if='dialog=="quiz-selection"'>
+              <h1>New Quiz</h1>
+              <!-- <h2>Continue a saved quiz:</h2>
+              <p>No Saved Quiz.</p> -->
+              <!-- <button>Continue</button> -->
+              <h2 style='margin-bottom: 0'>Create a new five question quiz:</h2>
+              <p style='margin-top: 6px'><i>"All Random" will randomly select five questions (with a random assortment of question types), while "Fixed Questions" will give a fixed set of five questions (one of each type).</i></p>
+              <div style='width: 360px'>
+                <button class='q-mc-btn' :class='{selected: options.quizType===0}' v-on:click='options.quizType=0'><span v-show='options.quizType===0'><i class='far fa-dot-circle fa-fw'></i></span><span v-show='options.quizType===1'><i class='far fa-circle fa-fw'></i></span> All Random (Recommended)</button>
+                <button class='q-mc-btn' :class='{selected: options.quizType===1}' v-on:click='options.quizType=1'><span v-show='options.quizType===1'><i class='far fa-dot-circle fa-fw'></i></span><span v-show='options.quizType===0'><i class='far fa-circle fa-fw'></i></span> Fixed Questions (All Types, For Demo Purposes)</button>
+                <button v-on:click='generateQuiz()'>Create Quiz</button>
+              </div>
+            </template>
+            <template v-if='dialog=="quiz-submit"'>
+              <h1>Submit Quiz</h1>
+              <template v-if='!quiz.review'>
+                <div v-if='readyToSubmit.ready'>
+                  <p><i class='fas fa-check'></i> All questions have been answered.</p>
+                  <p>Are you sure you want to submit your quiz now?</p>
+                </div>
+                <div v-else>
+                  <p><i class='fas fa-exclamation-triangle'></i> Some questions still need attention: </p>
+                  <p style='white-space: pre;'>{{readyToSubmit.missing}}</p>
+                  <p>You cannot submit your quiz until these issues have been resolved.</p>
+                </div>
+                <button v-on:click='dialog=false'>Cancel</button> <button v-on:click='submitQuiz()' :disabled='!readyToSubmit.ready'>Submit</button>
+              </template>
+              <template v-else>
+                <p>Your quiz has been submitted and graded.<br/>Your score was <b>{{quiz.stats.correct}}/{{quiz.stats.total}}</b>.</p>
+                <button v-on:click='page="landing";dialog=false'>Exit</button> <button v-on:click='dialog=false'>Review Answers</button>
+              </template>
+            </template>
+          </div>
+        </div>
+      </transition>
+    </div>
+  </body>
+  <script src='window.js'></script>
+</html>

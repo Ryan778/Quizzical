@@ -1,0 +1,385 @@
+/* Templating CSS */
+
+::selection {
+  background-color: #badcfd;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background-color: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #aab6c5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #b8c5d4;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  cursor: default;
+}
+
+.div-padded {
+  margin: auto;
+  max-width: 38rem;
+  padding: 2rem;
+}
+
+/* Buttons and input fields */
+button {
+  border: 1px solid #000; 
+  background: #fff; 
+  transition: background 0.18s, border 0.18s, box-shadow 0.18s;
+  border-radius: 0;
+  font-size: 14px;
+  padding: 4px 8px;
+}
+
+button:not([disabled]):hover {
+  cursor: pointer;
+  background: #f1f6ff;
+}
+
+button:not([disabled]):active {
+  background: #d9e5fa;
+}
+
+button.selected, button:not([disabled]).selected {
+  background: #b7f4f7;
+  color: #000; 
+}
+
+input.filled {
+  background: #b7f4f7;
+}
+
+input.filled:not([disabled]):hover, input.filled:focus {
+  background: #d5fdff;
+}
+
+button:focus, input:focus {
+  outline: none;
+}
+
+button:focus {
+  outline: 1px solid #84bcf1;
+  box-shadow: 0px 0px 4px #84bcf1;
+}
+
+/* Headers */
+h1 {
+  margin-top: 16px;
+  margin-bottom: 12px;
+}
+
+/* Vue Transitions */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .18s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+/* Disable selecting certain portions */
+h1, button, #div-landing, #dialog, #quiz-navbar, #div-streaks {
+  user-select: none;
+}
+
+/* Links */
+a {
+  color: #1249b1; 
+}
+
+a:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Dialog Box */
+#dialog-bk {
+  position: fixed;
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%;
+  background: #0000005f;
+}
+
+#dialog-div {
+  position: absolute;
+  top: calc(5% + 40px); 
+  left: calc(50% - 320px); 
+  width: 640px; 
+  height: auto;
+  max-height: 400px;
+  overflow-y: auto;
+  background: #fff;
+  box-shadow: 3px 3px 4px #555;
+  padding: 0 16px 24px;
+}
+
+/* Landing Page */
+#div-landing-bk {
+  background-image: url('images/architecture-1869211_1920.jpg');
+}
+
+.bk {
+  position: fixed;
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%;
+  z-index: -2;
+}
+
+/* Buttons */
+#div-landing button {
+  width: 140px;
+  display: block;
+  font-size: 16px;
+  padding: 6px 12px;
+  margin-bottom: 12px;
+  background: #ffffff8f; 
+  backdrop-filter: blur(3px);
+}
+
+#div-landing button:hover {
+  background: #bcdffc8f; 
+}
+
+#div-landing button:active {
+  background: #96d0ff8f; 
+}
+
+
+/* Questions */
+/* Header (Question #, Navigation Bar) */
+#quiz-navbar {
+  width: 100%;
+  text-align: center;
+}
+
+#quiz-navbar button {
+  /* border: 1px solid #555; */
+  border: none;
+  background: none; 
+  border-radius: 0;
+  font-size: 14px;
+  width: 42px;
+  height: 28px;
+  margin: 0 4px;
+  border-bottom: 2px solid transparent;
+}
+
+#quiz-navbar button:not([disabled]) {
+  cursor: pointer;
+}
+
+#quiz-navbar button:not([disabled]):hover {
+  background: #f1f6ff;
+}
+
+#quiz-navbar button.quiz-navbar-question.active {
+  color: #3d45b9;
+  border-color: #3d45b9;
+}
+
+/* Footer (Timer) */
+#quiz-footer {
+  position: absolute;
+  bottom: 1.5rem;
+}
+
+/* Submit Button */
+#quiz-navbar #q-nav-submit {
+  float: right;
+  width: 84px;
+  border: 1px solid #000;
+}
+
+/* Type: Multiple Choice */
+.q-mc-btn { 
+  text-align: left;
+  display: block;
+  width: 100%; 
+  padding: 4px 8px;
+  margin-bottom: 8px;
+}
+
+.q-tf-btn { 
+  width: 80px; 
+  font-size: 14px;
+  padding: 4px 8px;
+  margin-bottom: 8px;
+}
+
+/* Type: Ordering (Drag and Drop) */
+.q-o-outer {
+  border: 1px solid #000; 
+  width: 100%; 
+  margin-bottom: 8px;
+}
+
+.q-o-outer p {
+  margin: 0;
+  padding: 4px 8px;
+  transition: background-color 0.18s;
+}
+
+.q-o-outer p:hover {
+  cursor: grab;
+  background-color: #dbeeff;
+}
+
+.q-o-outer.locked p, .q-o-outer.locked p:hover {
+  cursor: not-allowed;
+  background-color: #fff;
+}
+
+.q-o-num {
+  display: inline-block; 
+  width: 14px; 
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Generic input field (SA, N) */
+.q-input {
+   font-size: 14px;
+   border-radius: 0;
+   border: 1px solid #333; 
+   padding: 4px 6px;
+   transition: all 0.18s;
+}
+
+.q-input:focus, .q-input:not([disabled]):hover {
+  border-color: #1249b1;
+  background: #eff5ff;
+}
+
+/* Export Page */
+#div-quiz-export h1 {
+  margin-top: 0;
+}
+
+/* Options Sidebar */
+#qe-settings {
+  user-select: none;
+  background-color: #e4e9f1;;
+  position: fixed;
+  width: 20rem;
+  height: calc(100% - 2rem);
+  padding: 1rem;
+  border-right: 1px solid #000;
+  box-shadow: 2px 0 6px #888;
+}
+
+.qe-cfg {
+  width: 300px;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.qe-action {
+  width: 80px; 
+}
+
+/* Print Preview */
+#qe-preview {
+  user-select: initial;
+  position: fixed;
+  left: 22rem;
+  width: calc(100% - 24rem);
+  padding: 1rem;
+  height: calc(100% - 2rem);
+  overflow-y: auto;
+}
+
+#qe-preview h2, #qe-preview h3 {
+  margin-bottom: 0;
+  font-weight: 400;
+}
+
+#qe-preview h3 {
+  margin-top: 8px;
+}
+
+.qe-details {
+  display: block;
+  color: #447;
+}
+
+.logo {
+  margin: 0;
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: #356cd1;
+}
+
+.red {
+  color: #970e0e; 
+}
+
+.green {
+  color: #086308;
+}
+
+#qe-preview.filter-bw * {
+  /* Filter so it's only black on white */
+  color: #000 !important; 
+}
+
+/* Streaks */
+#div-streaks-bk {
+  background: #fffbf2; 
+}
+
+.div-col-outer {
+  display: flex;
+  width: 100%;
+}
+
+.div-2col {
+  width: 50%;
+  padding: 0.8rem; 
+}
+
+#div-streak {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #ff4500, #ffa500);
+}
+
+#div-streak-inner {
+  position: absolute;
+  width: calc(100% - 16px);
+  height: calc(100% - 16px);
+  margin: 8px;
+  background: #fff4dfc9;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 1.8rem;
+  color: #b34118;
+}
+
+#div-streak-inner h1 {
+  font-size: 4.8rem;
+  margin-top: 1.5rem;
+}
+
+#div-streak-img {
+  width: 100%;
+  height: auto;
+}
+
+#p-streak {
+  width: 100%;
+  text-align: center;
+  font-size: 1.28rem;
+}

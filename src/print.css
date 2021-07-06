@@ -1,0 +1,9 @@
+/* Stylesheet for printing from the print page */
+#qe-settings {
+  display: none;
+}
+
+#qe-preview {
+  left: 0; 
+  width: calc(100% - 2rem); 
+}
